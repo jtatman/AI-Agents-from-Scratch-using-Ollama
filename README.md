@@ -114,7 +114,7 @@ The **Multi-Agent AI System with Ollama** is a Python-based application leveragi
 1. **Clone the Repository**
 
    ```bash
-   git clone https://github.com/yourusername/AI-Agents-from-Scratch-using-Ollama
+   git clone https://github.com/AIAnytime/AI-Agents-from-Scratch-using-Ollama
    cd AI-Agents-from-Scratch-using-Ollama
    ```
 
