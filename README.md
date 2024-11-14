@@ -1,6 +1,6 @@
 # Multi-Agent AI App with Ollama
 
-![Project Logo](https://via.placeholder.com/150)
+![Project Logo](logo.png)
 
 ## Table of Contents
 
