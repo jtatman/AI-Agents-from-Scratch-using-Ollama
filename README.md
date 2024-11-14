@@ -1,4 +1,4 @@
-# Multi-Agent AI System with Ollama
+# Multi-Agent AI App with Ollama
 
 ![Project Logo](https://via.placeholder.com/150)
 
@@ -19,7 +19,7 @@
 
 ## Overview
 
-The **Multi-Agent AI System with Ollama** is a Python-based application leveraging the open-source LLaMA 3.2:3b model via Ollama to perform specialized tasks through a collaborative multi-agent architecture. Built with Streamlit for an intuitive web interface, this system includes agents for summarizing medical texts, writing research articles, and sanitizing medical data (Protected Health Information - PHI). Each primary agent is paired with a corresponding validator agent to ensure the quality and accuracy of the outputs.
+The **Multi-Agent AI App with Ollama** is a Python-based application leveraging the open-source LLaMA 3.2:3b model via Ollama to perform specialized tasks through a collaborative multi-agent architecture. Built with Streamlit for an intuitive web interface, this system includes agents for summarizing medical texts, writing research articles, and sanitizing medical data (Protected Health Information - PHI). Each primary agent is paired with a corresponding validator agent to ensure the quality and accuracy of the outputs.
 
 ## Features
 
