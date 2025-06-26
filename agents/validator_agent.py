@@ -10,27 +10,17 @@ class ValidatorAgent(AgentBase):
         messages = [
             {
                 "role": "system",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "You are an AI assistant that validates research articles for accuracy, completeness, and adherence to academic standards."
-                    }
-                ]
+                "content": "You are an AI assistant that validates research articles for accuracy, completeness, and adherence to academic standards."
             },
             {
                 "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": (
-                            "Given the topic and the research article below, assess whether the article comprehensively covers the topic, follows a logical structure, and maintains academic standards.\n"
-                            "Provide a brief analysis and rate the article on a scale of 1 to 5, where 5 indicates excellent quality.\n\n"
-                            f"Topic: {topic}\n\n"
-                            f"Article:\n{article}\n\n"
-                            "Validation:"
-                        )
-                    }
-                ]
+                "content": (
+                    "Given the topic and the research article below, assess whether the article comprehensively covers the topic, follows a logical structure, and maintains academic standards.\n"
+                    "Provide a brief analysis and rate the article on a scale of 1 to 5, where 5 indicates excellent quality.\n\n"
+                    f"Topic: {topic}\n\n"
+                    f"Article:\n{article}\n\n"
+                    "Validation:"
+                )
             }
         ]
         validation = self.call_llama(
