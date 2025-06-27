@@ -2,9 +2,10 @@
 
 import streamlit as st
 from agents import AgentManager
-from utils.logger import logger
 import os
 from dotenv import load_dotenv
+import logging
+from utils.logger import logger
 
 # Load environment variables from .env if present
 load_dotenv()
