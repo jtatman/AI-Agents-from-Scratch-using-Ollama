@@ -3,3 +3,14 @@ streamlit
 pandas
 loguru
 python-dotenv
+plotly
+streamlit-option-menu
+fpdf2
+python-docx
+psutil
+pytest
+pytest-asyncio
+configparser
+nltk
+spacy
+streamlit-ace
