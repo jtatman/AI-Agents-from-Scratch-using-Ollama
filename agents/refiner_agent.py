@@ -10,24 +10,14 @@ class RefinerAgent(AgentBase):
         messages = [
             {
                 "role": "system",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": "You are an expert editor who refines and enhances research articles for clarity, coherence, and academic quality."
-                    }
-                ]
+                "content": "You are an expert editor who refines and enhances research articles for clarity, coherence, and academic quality."
             },
             {
                 "role": "user",
-                "content": [
-                    {
-                        "type": "text",
-                        "text": (
-                            "Please refine the following research article draft to improve its language, coherence, and overall quality:\n\n"
-                            f"{draft}\n\nRefined Article:"
-                        )
-                    }
-                ]
+                "content": (
+                    "Please refine the following research article draft to improve its language, coherence, and overall quality:\n\n"
+                    f"{draft}\n\nRefined Article:"
+                )
             }
         ]
         refined_article = self.call_llama(
