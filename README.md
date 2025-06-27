@@ -1,5 +1,7 @@
 # Multi-Agent AI App with Ollama
 
+#### updated to use correct formatting for ollama during refiner sequence
+
 ![Project Logo](logo.png)
 
 ## Table of Contents
