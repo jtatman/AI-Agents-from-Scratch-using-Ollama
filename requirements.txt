@@ -3,3 +3,6 @@ streamlit
 pandas
 loguru
 python-dotenv
+scholarly
+arxiv
+

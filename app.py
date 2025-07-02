@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 import logging
 from utils.logger import logger
 
+
 # Load environment variables from .env if present
 load_dotenv()
 
@@ -16,30 +17,38 @@ def main():
 
     st.sidebar.title("Select Task")
     task = st.sidebar.selectbox("Choose a task:", [
-        "Summarize Medical Text",
+        "Summarize Scientific Text",
         "Write and Refine Research Article",
-        "Sanitize Medical Data (PHI)"
+        "Search arXiv Papers",
+        "Search Google Scholar",
+        "Search Scholarly Web"
     ])
 
-    agent_manager = AgentManager(max_retries=2, verbose=True)
+    agent_manager = AgentManager()
 
     if task == "Summarize Medical Text":
         summarize_section(agent_manager)
     elif task == "Write and Refine Research Article":
         write_and_refine_article_section(agent_manager)
-    elif task == "Sanitize Medical Data (PHI)":
-        sanitize_data_section(agent_manager)
+    elif task == "Search arXiv Papers":
+        search_arxiv_papers(agent_manager)
+    elif task == "Search Google Scholar":
+        search_google_scholar(agent_manager)
+    elif task == "Search Scholarly Web":
+        search_web(agent_manager)
+    #elif task == "Sanitize Medical Data (PHI)":
+    #    sanitize_data_section(agent_manager)
 
 def summarize_section(agent_manager):
-    st.header("Summarize Medical Text")
-    text = st.text_area("Enter medical text to summarize:", height=200)
+    st.header("Summarize Scientific Papers")
+    paper_text = st.text_area("Enter scientific paper text to summarize:", height=200)
     if st.button("Summarize"):
-        if text:
+        if paper_text:
             main_agent = agent_manager.get_agent("summarize")
             validator_agent = agent_manager.get_agent("summarize_validator")
             with st.spinner("Summarizing..."):
                 try:
-                    summary = main_agent.execute(text)
+                    summary = main_agent.execute(paper_text)
                     st.subheader("Summary:")
                     st.write(summary)
                 except Exception as e:
@@ -49,7 +58,7 @@ def summarize_section(agent_manager):
 
             with st.spinner("Validating summary..."):
                 try:
-                    validation = validator_agent.execute(original_text=text, summary=summary)
+                    validation = validator_agent.execute(original_text=paper_text, summary=summary)
                     st.subheader("Validation:")
                     st.write(validation)
                 except Exception as e:
@@ -98,33 +107,79 @@ def write_and_refine_article_section(agent_manager):
         else:
             st.warning("Please enter a topic for the research article.")
 
-def sanitize_data_section(agent_manager):
-    st.header("Sanitize Medical Data (PHI)")
-    medical_data = st.text_area("Enter medical data to sanitize:", height=200)
-    if st.button("Sanitize Data"):
-        if medical_data:
-            main_agent = agent_manager.get_agent("sanitize_data")
-            validator_agent = agent_manager.get_agent("sanitize_data_validator")
-            with st.spinner("Sanitizing data..."):
+
+# new functions that need agent configuration
+def search_arxiv_papers(agent_manager):
+    st.header("Search arXiv Papers")
+    query = st.text_input("Enter search query for arXiv:")
+    if st.button("Search arXiv"):
+        if query:
+            arxiv_agent = agent_manager.get_agent("arxiv")
+            validator_agent = agent_manager.get_agent("arxiv_validator")
+            with st.spinner("Searching arXiv..."):
                 try:
-                    sanitized_data = main_agent.execute(medical_data)
-                    st.subheader("Sanitized Data:")
-                    st.write(sanitized_data)
+                    results = arxiv_agent.search(query)
+                    validated_results = validator_agent.validate(results)
+                    st.subheader("Search Results:")
+                    for result in validated_results:
+                        st.write(f"**Title:** {result['title']}")
+                        st.write(f"**Authors:** {', '.join(result['authors'])}")
+                        st.write(f"**Summary:** {result['summary']}")
+                        st.write(f"[Read more]({result['url']})")
+                        st.write("---")
                 except Exception as e:
                     st.error(f"Error: {e}")
-                    logger.error(f"SanitizeDataAgent Error: {e}")
-                    return
-
-            with st.spinner("Validating sanitized data..."):
-                try:
-                    validation = validator_agent.execute(original_data=medical_data, sanitized_data=sanitized_data)
-                    st.subheader("Validation:")
-                    st.write(validation)
-                except Exception as e:
-                    st.error(f"Validation Error: {e}")
-                    logger.error(f"SanitizeDataValidatorAgent Error: {e}")
+                    logger.error(f"ArxivAgent Error: {e}")
         else:
-            st.warning("Please enter medical data to sanitize.")
+            st.warning("Please enter a search query.")
+
+def search_google_scholar(agent_manager):
+    st.header("Search Google Scholar")
+    query = st.text_input("Enter search query for Google Scholar:")
+    if st.button("Search Google Scholar"):
+        if query:
+            google_scholar_agent = agent_manager.get_agent("google_scholar")
+            validator_agent = agent_manager.get_agent("google_scholar_validator")
+            with st.spinner("Searching Google Scholar..."):
+                try:
+                    results = google_scholar_agent.search(query)
+                    validated_results = validator_agent.validate(results)
+                    st.subheader("Search Results:")
+                    for result in validated_results:
+                        st.write(f"**Title:** {result['title']}")
+                        st.write(f"**Authors:** {result['authors']}")
+                        st.write(f"**Abstract:** {result['abstract']}")
+                        st.write(f"[Read more]({result['url']})")
+                        st.write("---")
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    logger.error(f"GoogleScholarAgent Error: {e}")
+        else:
+            st.warning("Please enter a search query.")
+
+def search_web(agent_manager):
+    st.header("Search Scholarly Web")
+    query = st.text_input("Enter search query for the web:")
+    if st.button("Search Web"):
+        if query:
+            web_search_agent = agent_manager.get_agent("web_search")
+            validator_agent = agent_manager.get_agent("web_search_validator")
+            with st.spinner("Searching the web..."):
+                try:
+                    results = web_search_agent.search(query)
+                    validated_results = validator_agent.validate(results)
+                    st.subheader("Search Results:")
+                    for result in validated_results:
+                        st.write(f"**Title:** {result['title']}")
+                        st.write(f"**Author:** {result['author']}")
+                        st.write(f"**Abstract:** {result['abstract']}")
+                        st.write(f"[Read more]({result['url']})")
+                        st.write("---")
+                except Exception as e:
+                    st.error(f"Error: {e}")
+                    logger.error(f"WebSearchAgent Error: {e}")
+        else:
+            st.warning("Please enter a search query.")
 
 if __name__ == "__main__":
     main()
