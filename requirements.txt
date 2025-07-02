@@ -1,8 +1,9 @@
-ollama
 streamlit
 pandas
 loguru
 python-dotenv
 scholarly
 arxiv
+PyPDF2 
+beautifulsoup4
 

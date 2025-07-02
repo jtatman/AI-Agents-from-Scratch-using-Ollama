@@ -1,23 +1,44 @@
 # agents/write_article_validator_agent.py
 
-from .agent_base import AgentBase
+from typing import Optional
+from .openai_response import get_chat_response
+from openai.types.chat import ChatCompletionMessageParam
 
-class WriteArticleValidatorAgent(AgentBase):
-    def __init__(self, max_retries=2, verbose=True):
-        super().__init__(name="WriteArticleValidatorAgent", max_retries=max_retries, verbose=verbose)
+class WriteArticleValidatorAgent:
+    def __init__(self, verbose: bool = True) -> None:
+        self.verbose = verbose
 
-    def execute(self, topic, article):
-        system_message = "You are an AI assistant that validates research articles."
-        user_content = (
-            "Given the topic and the article, assess whether the article comprehensively covers the topic, follows a logical structure, and maintains academic standards.\n"
-            "Provide a brief analysis and rate the article on a scale of 1 to 5, where 5 indicates excellent quality.\n\n"
-            f"Topic: {topic}\n\n"
-            f"Article:\n{article}\n\n"
-            "Validation:"
-        )
-        messages = [
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_content}
+    def execute(
+        self,
+        text: str,
+        server_address: Optional[str] = None,
+        model_name: Optional[str] = None
+    ) -> str:
+        """Validate written article using LLM."""
+        messages: list[ChatCompletionMessageParam] = [
+            {"role": "system", "content": "You are an expert in scientific article validation."},
+            {"role": "user", "content": f"Validate the following article:\n{text}"}
         ]
-        validation = self.call_llama(messages, max_tokens=512)
+        try:
+            if model_name is None:
+                model_name = "deepseek-r1:1.5b"
+            if self.verbose:
+                print(f"[WriteArticleValidatorAgent] Sending OpenAI request: model={model_name}, messages={messages}")
+            response = get_chat_response(
+                model=model_name,
+                messages=messages,
+                server_address=server_address,
+                temperature=0.3,
+                max_tokens=2049,
+            )
+            validation = response.choices[0].message.content
+            if self.verbose:
+                print(f"[WriteArticleValidatorAgent] OpenAI response: {validation}")
+        except Exception as e:
+            import traceback
+            print(f"[WriteArticleValidatorAgent] Exception: {e}")
+            traceback.print_exc()
+            raise RuntimeError(f"[WriteArticleValidatorAgent] Failed to get response from OpenAI-compatible API: {e}")
+        if not isinstance(validation, str):
+            validation = ""
         return validation
