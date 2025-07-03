@@ -21,58 +21,18 @@
 
 ## Overview
 
-The **Multi-Agent AI App with Ollama** is a Python-based application leveraging the open-source LLaMA 3.2:3b model via Ollama to perform specialized tasks through a collaborative multi-agent architecture. Built with Streamlit for an intuitive web interface, this system includes agents for summarizing medical texts, writing research articles, and sanitizing medical data (Protected Health Information - PHI). Each primary agent is paired with a corresponding validator agent to ensure the quality and accuracy of the outputs.
+The **Multi-Agent AI App with Ollama** is a Python-based application leveraging open-source models via Ollama to perform specialized tasks through a collaborative multi-agent architecture. Built with Streamlit for an intuitive web interface, this system includes agents for summarizing scientific texts, writing research articles, and searching for scientific papers. Each primary agent is paired with a corresponding validator agent to ensure the quality and accuracy of the outputs.
 
 ## Features
 
-- **Summarize Medical Texts:** Generate concise summaries of lengthy medical documents.
+- **Summarize Scientific Texts:** Generate concise summaries of lengthy medical documents.
 - **Write and Refine Research Articles:** Create detailed research articles based on a given topic and optional outline, followed by refinement for enhanced quality.
-- **Sanitize Medical Data (PHI):** Remove sensitive health information from medical datasets to ensure privacy compliance.
+- **Search Arxiv Papers:** Search Arxiv using a Python module to investigate new scientific avenues.
+- **Search Google Scholar:** Search Google Scholar for scientific research papers.
+- **Search Scholarly Articles on Web:** Expand search by using the web in general to see more papers and summaries.
 - **Quality Validation:** Each primary task is accompanied by a validator agent to assess and ensure output quality.
 - **Robust Logging:** Comprehensive logging for monitoring and debugging purposes.
 - **User-Friendly Interface:** Streamlit-based web app for easy interaction and task management.
-
-## Architecture
-
-```
-+-------------------+
-|       User        |
-+---------+---------+
-          |
-          | Interacts via
-          v
-+---------+---------+
-|    Streamlit App  |
-+---------+---------+
-          |
-          | Sends task requests to
-          v
-+---------+---------+
-|  Agent Manager    |
-+---------+---------+
-          |
-          +---------------------------------------------+
-          |                      |                      |
-          v                      v                      v
-+---------+---------+  +---------+---------+  +---------+---------+
-|  Summarize Agent  |  |  Write Article    |  |  Sanitize Data    |
-|  (Generates summary)| |  (Generates draft)| |  (Removes PHI)    |
-+---------+---------+  +---------+---------+  +---------+---------+
-          |                      |                      |
-          v                      v                      v
-+---------+---------+  +---------+---------+  +---------+---------+
-|Summarize Validator|  | Refiner Agent      |  |Sanitize Validator |
-|      Agent        |  |  (Enhances draft)  |  |      Agent        |
-+---------+---------+  +---------+----------+ +----------+--------+
-          |                      |                      |
-          |                      |                      |
-          +-----------+----------+-----------+----------+
-                      |                      |
-                      v                      v
-                +-----+-------+        +-----+-------+
-                |   Logger    |        |   Logger    |
-                +-------------+        +-------------+
-```
 
 ### Components Breakdown
 
@@ -110,6 +70,7 @@ The **Multi-Agent AI App with Ollama** is a Python-based application leveraging 
 - **Python 3.7 or higher:** [Download Python](https://www.python.org/downloads/)
 - **Ollama Installed:** [Ollama Installation Guide](https://ollama.com/docs/installation)
 - **LLaMA 3.2:3b Model:** Ensure the `llama3.2:3b` model is available and correctly configured in Ollama.
+- **Python modules:** Arxiv, Scholarly, and Requests
 
 ### Steps
 
@@ -138,8 +99,9 @@ The **Multi-Agent AI App with Ollama** is a Python-based application leveraging 
 4. **Set Up Ollama and the LLaMA Model**
 
    - **Install Ollama:** Follow the [Ollama Installation Guide](https://ollama.com) to install Ollama on your system.
-   - **Download and Configure LLaMA 3.2:3b Model:**
-     - Ensure that the `llama3.2:3b` model is downloaded and properly set up in Ollama.
+   - **Download and Configure Whatever Model Makes Sense:**
+     - Ensure that a model is downloaded and properly set up in Ollama.
+     - Make note of that model
      - You can verify the model is available by running the test script or using the Ollama CLI.
 
 ## Usage

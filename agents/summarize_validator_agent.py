@@ -1,23 +1,45 @@
 # agents/summarize_validator_agent.py
 
-from .agent_base import AgentBase
+from typing import Optional
+from .openai_response import get_chat_response
+from openai.types.chat import ChatCompletionMessageParam
 
-class SummarizeValidatorAgent(AgentBase):
-    def __init__(self, max_retries=2, verbose=True):
-        super().__init__(name="SummarizeValidatorAgent", max_retries=max_retries, verbose=verbose)
+class SummarizeValidatorAgent:
+    def __init__(self, verbose: bool = True) -> None:
+        self.verbose = verbose
 
-    def execute(self, original_text, summary):
-        system_message = "You are an AI assistant that validates summaries of medical texts."
-        user_content = (
-            "Given the original text and its summary, assess whether the summary accurately and concisely captures the key points of the original text.\n"
-            "Provide a brief analysis and rate the summary on a scale of 1 to 5, where 5 indicates excellent quality.\n\n"
-            f"Original Text:\n{original_text}\n\n"
-            f"Summary:\n{summary}\n\n"
-            "Validation:"
-        )
-        messages = [
-            {"role": "system", "content": system_message},
-            {"role": "user", "content": user_content}
+    def execute(
+        self,
+        original_text: str,
+        summary: str,
+        server_address: Optional[str] = None,
+        model_name: Optional[str] = None
+    ) -> str:
+        """Validate summary using LLM."""
+        messages: list[ChatCompletionMessageParam] = [
+            {"role": "system", "content": "You are an expert in scientific summary validation."},
+            {"role": "user", "content": f"Validate the following summary:\n{summary}\n\nOriginal Text:\n{original_text}"}
         ]
-        validation = self.call_llama(messages, max_tokens=512)
+        try:
+            if model_name is None:
+                model_name = "deepseek-r1:1.5b"
+            if self.verbose:
+                print(f"[SummarizeValidatorAgent] Sending OpenAI request: model={model_name}, messages={messages}")
+            response = get_chat_response(
+                model=model_name,
+                messages=messages,
+                server_address=server_address,
+                temperature=0.3,
+                max_tokens=2049,
+            )
+            validation = response.choices[0].message.content
+            if self.verbose:
+                print(f"[SummarizeValidatorAgent] OpenAI response: {validation}")
+        except Exception as e:
+            import traceback
+            print(f"[SummarizeValidatorAgent] Exception: {e}")
+            traceback.print_exc()
+            raise RuntimeError(f"[SummarizeValidatorAgent] Failed to get response from OpenAI-compatible API: {e}")
+        if not isinstance(validation, str):
+            validation = ""
         return validation
